@@ -28,28 +28,35 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
+            this.components = new System.ComponentModel.Container();
+            this.PresetMinutesUpDown = new System.Windows.Forms.NumericUpDown();
             this.StartButton = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.CountdownTimerLabel = new System.Windows.Forms.Label();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
-            this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
-            this.label2 = new System.Windows.Forms.Label();
             this.PauseButton = new System.Windows.Forms.Button();
             this.StopButton = new System.Windows.Forms.Button();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
+            this.StatusLabel = new System.Windows.Forms.Label();
+            this.CountdownTimer = new System.Windows.Forms.Timer(this.components);
+            ((System.ComponentModel.ISupportInitialize)(this.PresetMinutesUpDown)).BeginInit();
             this.tableLayoutPanel1.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
-            this.flowLayoutPanel2.SuspendLayout();
             this.SuspendLayout();
             // 
-            // numericUpDown1
+            // PresetMinutesUpDown
             // 
-            this.numericUpDown1.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.numericUpDown1.Location = new System.Drawing.Point(3, 3);
-            this.numericUpDown1.Name = "numericUpDown1";
-            this.numericUpDown1.Size = new System.Drawing.Size(53, 21);
-            this.numericUpDown1.TabIndex = 0;
+            this.PresetMinutesUpDown.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.PresetMinutesUpDown.DecimalPlaces = 1;
+            this.PresetMinutesUpDown.Location = new System.Drawing.Point(3, 3);
+            this.PresetMinutesUpDown.Name = "PresetMinutesUpDown";
+            this.PresetMinutesUpDown.Size = new System.Drawing.Size(53, 21);
+            this.PresetMinutesUpDown.TabIndex = 0;
+            this.PresetMinutesUpDown.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
             // 
             // StartButton
             // 
@@ -62,6 +69,7 @@
             this.StartButton.TabIndex = 1;
             this.StartButton.Text = "开始";
             this.StartButton.UseVisualStyleBackColor = true;
+            this.StartButton.Click += new System.EventHandler(this.StartButton_Click);
             // 
             // label1
             // 
@@ -77,49 +85,46 @@
             // 
             this.tableLayoutPanel1.ColumnCount = 1;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel1.Controls.Add(this.CountdownTimerLabel, 0, 1);
             this.tableLayoutPanel1.Controls.Add(this.flowLayoutPanel1, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this.flowLayoutPanel2, 0, 1);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 2;
+            this.tableLayoutPanel1.RowCount = 3;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(324, 108);
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(324, 103);
             this.tableLayoutPanel1.TabIndex = 3;
+            // 
+            // CountdownTimerLabel
+            // 
+            this.CountdownTimerLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.CountdownTimerLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.CountdownTimerLabel.Location = new System.Drawing.Point(3, 34);
+            this.CountdownTimerLabel.Name = "CountdownTimerLabel";
+            this.CountdownTimerLabel.Size = new System.Drawing.Size(318, 69);
+            this.CountdownTimerLabel.TabIndex = 3;
+            this.CountdownTimerLabel.Text = "00:00:00";
+            this.CountdownTimerLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.CountdownTimerLabel.Resize += new System.EventHandler(this.CountdownTimerLabel_Resize);
             // 
             // flowLayoutPanel1
             // 
             this.flowLayoutPanel1.AutoSize = true;
-            this.flowLayoutPanel1.Controls.Add(this.numericUpDown1);
+            this.flowLayoutPanel1.Controls.Add(this.PresetMinutesUpDown);
             this.flowLayoutPanel1.Controls.Add(this.label1);
             this.flowLayoutPanel1.Controls.Add(this.StartButton);
             this.flowLayoutPanel1.Controls.Add(this.PauseButton);
             this.flowLayoutPanel1.Controls.Add(this.StopButton);
+            this.flowLayoutPanel1.Controls.Add(this.StatusLabel);
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(3, 3);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
             this.flowLayoutPanel1.Size = new System.Drawing.Size(318, 28);
             this.flowLayoutPanel1.TabIndex = 0;
-            // 
-            // flowLayoutPanel2
-            // 
-            this.flowLayoutPanel2.Controls.Add(this.label2);
-            this.flowLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanel2.Location = new System.Drawing.Point(3, 37);
-            this.flowLayoutPanel2.Name = "flowLayoutPanel2";
-            this.flowLayoutPanel2.Size = new System.Drawing.Size(318, 68);
-            this.flowLayoutPanel2.TabIndex = 1;
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Courier New", 42F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(3, 0);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(297, 60);
-            this.label2.TabIndex = 2;
-            this.label2.Text = "00:00:00";
             // 
             // PauseButton
             // 
@@ -132,6 +137,7 @@
             this.PauseButton.TabIndex = 1;
             this.PauseButton.Text = "暂停";
             this.PauseButton.UseVisualStyleBackColor = true;
+            this.PauseButton.Click += new System.EventHandler(this.PauseButton_Click);
             // 
             // StopButton
             // 
@@ -144,38 +150,53 @@
             this.StopButton.TabIndex = 1;
             this.StopButton.Text = "停止";
             this.StopButton.UseVisualStyleBackColor = true;
+            this.StopButton.Click += new System.EventHandler(this.StopButton_Click);
+            // 
+            // StatusLabel
+            // 
+            this.StatusLabel.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.StatusLabel.AutoSize = true;
+            this.StatusLabel.Location = new System.Drawing.Point(232, 8);
+            this.StatusLabel.Name = "StatusLabel";
+            this.StatusLabel.Size = new System.Drawing.Size(41, 12);
+            this.StatusLabel.TabIndex = 2;
+            this.StatusLabel.Text = "label2";
+            this.StatusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // CountdownTimer
+            // 
+            this.CountdownTimer.Tick += new System.EventHandler(this.CountdownTimer_Tick);
             // 
             // CountdownWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(324, 108);
+            this.ClientSize = new System.Drawing.Size(324, 103);
             this.Controls.Add(this.tableLayoutPanel1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
             this.Name = "CountdownWindow";
             this.TopMost = true;
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.PresetMinutesUpDown)).EndInit();
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
             this.flowLayoutPanel1.ResumeLayout(false);
             this.flowLayoutPanel1.PerformLayout();
-            this.flowLayoutPanel2.ResumeLayout(false);
-            this.flowLayoutPanel2.PerformLayout();
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.NumericUpDown numericUpDown1;
+        private System.Windows.Forms.NumericUpDown PresetMinutesUpDown;
         private System.Windows.Forms.Button StartButton;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
-        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel2;
-        private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button PauseButton;
         private System.Windows.Forms.Button StopButton;
+        private System.Windows.Forms.Timer CountdownTimer;
+        private System.Windows.Forms.Label StatusLabel;
+        private System.Windows.Forms.Label CountdownTimerLabel;
     }
 }
 
