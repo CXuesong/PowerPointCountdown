@@ -198,6 +198,7 @@ namespace PowerPointCountdown
             };
             ppt.ActiveSlideShowEnd += (_, e) =>
             {
+                Debug.Print("Active Slideshow Exited.");
                 InvokeAsync(() =>
                 {
                     IsCountdownPaused = true;
@@ -205,9 +206,10 @@ namespace PowerPointCountdown
             };
             myTimer.Elapsed += (_, e) =>
             {
+                Debug.Print("Timer Pulse");
                 InvokeAsync(() =>
                 {
-                    //Debug.Print("Pulse");
+                    Debug.Print("Async Pulse");
                     UpdateTimerDisplay();
                     if (cdt.IsTimeUp)
                     {

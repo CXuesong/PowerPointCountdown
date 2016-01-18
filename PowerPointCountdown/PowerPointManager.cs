@@ -16,6 +16,7 @@ namespace PowerPointCountdown
     {
         private PptApplication app = new PptApplication();
         private SlideShowWindow _ActiveSlideShow;
+        private Presentation _ActivePresentation;
         public event EventHandler<SlideShowEventArgs> SlideShowBegin;
         public event EventHandler ActiveSlideShowEnd;
         public event EventHandler ActiveSlideShowChanged;
@@ -31,6 +32,10 @@ namespace PowerPointCountdown
                 if (_ActiveSlideShow != value)
                 {
                     _ActiveSlideShow = value;
+                    // Holds the corresponding presentation to the specified slideshow window.
+                    // This object will later be used to determine if ActiveSlideShow has finished,
+                    // because when SlideShowWindow has finised, it will be destructed and cannot be accessed.
+                    _ActivePresentation = _ActiveSlideShow?.Presentation;
                     OnActiveSlideShowChanged();
                 }
             }
@@ -62,18 +67,9 @@ namespace PowerPointCountdown
 
         private void OnAppOnSlideShowEnd(Presentation presentation)
         {
-            try
+            if (_ActivePresentation == presentation)
             {
-                if (ActiveSlideShow?.View?.State == PpSlideShowState.ppSlideShowDone)
-                {
-                    OnActiveSlideShowEnd();
-                    ActiveSlideShow = null;
-                }
-            }
-            catch (COMException)
-            {
-                // Handles COMException with error code 0x80004005
-                // object does not exist
+                OnActiveSlideShowEnd();
                 ActiveSlideShow = null;
             }
         }
