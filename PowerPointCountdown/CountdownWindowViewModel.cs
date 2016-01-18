@@ -1,13 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Mvvm;
+using Microsoft.Win32;
 using PowerPointCountdown.Properties;
 
 namespace PowerPointCountdown
@@ -20,8 +25,10 @@ namespace PowerPointCountdown
         private bool _IsCountdownStarted;
         private string _PresentationName;
 
+        private ImageSource _BackgroundImageSource;
         private DelegateCommand _StartCountdownCommand;
         private DelegateCommand _StopCountdownCommand;
+        private DelegateCommand _OptionsBackgroundImageCommand;
 
         private Timer myTimer = new Timer();
         private CountdownTimer cdt = new CountdownTimer();
@@ -81,6 +88,10 @@ namespace PowerPointCountdown
         public TimeSpan RemainingTime => cdt.TimeRemains;
 
         #endregion
+
+        #region UI
+
+        public ImageSource BackgroundImageSource => _BackgroundImageSource;
 
         /// <summary>
         /// The time, set by user, in minutes to be counted down.
@@ -147,6 +158,65 @@ namespace PowerPointCountdown
             }
         }
 
+        public DelegateCommand OptionsBackgroundImageCommand
+        {
+            get
+            {
+                if (_OptionsBackgroundImageCommand == null)
+                {
+                    _OptionsBackgroundImageCommand = new DelegateCommand(() =>
+                    {
+                        var ofd = new OpenFileDialog
+                        {
+                            Filter = "*.bmp;*.jpg;*.jpeg;*.png;*.tif;*.tiff|*.bmp;*.jpg;*.jpeg;*.png;*.tif;*.tiff"
+                        };
+                        if (ofd.ShowDialog() == true)
+                        {
+                            var newUri = new Uri(ofd.FileName, UriKind.Absolute);
+                            var startupUri = new Uri(Directory.GetCurrentDirectory(), UriKind.Absolute);
+                            var relativeUri = startupUri.MakeRelativeUri(newUri);
+                            Settings.Default.BackgroundImageSource = relativeUri;
+                            ApplySettings();
+                        }
+                    });
+                }
+                return _OptionsBackgroundImageCommand;
+            }
+        }
+
+        #endregion
+
+        private bool postInitializeCalled;
+
+        public void PostInitialize()
+        {
+            if (postInitializeCalled) throw new InvalidOperationException();
+            postInitializeCalled = true;
+            ApplySettings();
+        }
+
+        public void ApplySettings()
+        {
+            try
+            {
+                var imageUri = Settings.Default.BackgroundImageSource;
+                var startupUri = new Uri(Directory.GetCurrentDirectory(), UriKind.Absolute);
+                if (imageUri == null)
+                {
+                    _BackgroundImageSource = null;
+                }
+                else
+                {
+                    if (!imageUri.IsAbsoluteUri) imageUri = new Uri(startupUri, imageUri);
+                    _BackgroundImageSource = new BitmapImage(imageUri);
+                }
+                OnPropertyChanged(nameof(BackgroundImageSource));
+            }
+            catch (Exception ex)
+            {
+                Utility.ReportException(ex);
+            }
+        }
 
         private void UpdateTimerDisplay()
         {

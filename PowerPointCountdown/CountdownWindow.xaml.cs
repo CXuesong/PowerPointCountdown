@@ -26,6 +26,7 @@ namespace PowerPointCountdown
         public CountdownWindow()
         {
             InitializeComponent();
+            ViewModel.PostInitialize();
             VisualStateManager.GoToElementState((FrameworkElement)this.Content, "Stopped", true);
             PropertyChangedEventManager.AddHandler(ViewModel, (_, e) =>
             {
@@ -47,11 +48,6 @@ namespace PowerPointCountdown
             this.Top += e.VerticalChange;
         }
 
-        private void ExitButton_Click(object sender, RoutedEventArgs e)
-        {
-            this.Close();
-        }
-
         private void Window_Closed(object sender, EventArgs e)
         {
             ViewModel.Dispose();
@@ -60,6 +56,22 @@ namespace PowerPointCountdown
         private void Window_Deactivated(object sender, EventArgs e)
         {
             CountdownMinutesTextBox.GetBindingExpression(TextBox.TextProperty).UpdateSource();
+        }
+
+        private void MenuButton_Click(object sender, RoutedEventArgs e)
+        {
+            ((Control)sender).ContextMenu.IsOpen = true;
+        }
+
+        private void ExitMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
+
+        private void ContextMenu_Opened(object sender, RoutedEventArgs e)
+        {
+            // Fix data context.
+            ((Control) sender).DataContext = this.DataContext;
         }
     }
 }

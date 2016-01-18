@@ -5,5 +5,8 @@
     <Setting Name="LastCountdownMinutes" Type="System.Double" Scope="User">
       <Value Profile="(Default)">1</Value>
     </Setting>
+    <Setting Name="BackgroundImageSource" Type="System.Uri" Scope="User">
+      <Value Profile="(Default)">background.jpg</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
