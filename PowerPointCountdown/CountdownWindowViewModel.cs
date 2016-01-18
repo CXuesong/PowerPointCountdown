@@ -173,7 +173,7 @@ namespace PowerPointCountdown
                         if (ofd.ShowDialog() == true)
                         {
                             var newUri = new Uri(ofd.FileName, UriKind.Absolute);
-                            var startupUri = new Uri(Directory.GetCurrentDirectory(), UriKind.Absolute);
+                            var startupUri = new Uri(Directory.GetCurrentDirectory() + "\\", UriKind.Absolute);
                             var relativeUri = startupUri.MakeRelativeUri(newUri);
                             Settings.Default.BackgroundImageSource = relativeUri;
                             ApplySettings();
@@ -200,7 +200,7 @@ namespace PowerPointCountdown
             try
             {
                 var imageUri = Settings.Default.BackgroundImageSource;
-                var startupUri = new Uri(Directory.GetCurrentDirectory(), UriKind.Absolute);
+                var startupUri = new Uri(Directory.GetCurrentDirectory() + "\\", UriKind.Absolute);
                 if (imageUri == null)
                 {
                     _BackgroundImageSource = null;

@@ -38,7 +38,7 @@
                 </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
-        <Image Source="{Binding BackgroundImageSource, Mode=OneWay}" />
+        <Image Source="{Binding BackgroundImageSource, Mode=OneWay}" Stretch="UniformToFill" />
         <Thumb DragDelta="Thumb_DragDelta" VerticalAlignment="Top" HorizontalAlignment="Left" Width="20" Height="20" ToolTip="拖动以移动窗口。">
             <Thumb.Template>
                 <ControlTemplate>
