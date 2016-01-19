@@ -37,7 +37,6 @@ namespace PowerPointCountdown.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("background.jpg")]
         public global::System.Uri BackgroundImageSource {
             get {
                 return ((global::System.Uri)(this["BackgroundImageSource"]));

@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:PowerPointCountdown"
         mc:Ignorable="d"
         x:Name="ThisWindow"
-        Height="100" Width="200" Topmost="True" Opacity="0.8" WindowStyle="None" AllowsTransparency="True" ResizeMode="CanResizeWithGrip" Closed="Window_Closed" Top="0" Left="0" Deactivated="Window_Deactivated" >
+        Height="100" Width="200" Topmost="True" Opacity="0.8" WindowStyle="None" AllowsTransparency="True" ResizeMode="CanResizeWithGrip" Closed="Window_Closed" Top="0" Left="0" Deactivated="Window_Deactivated" SizeChanged="ThisWindow_SizeChanged" >
     <Window.DataContext>
         <local:CountdownWindowViewModel />
     </Window.DataContext>
@@ -14,6 +14,7 @@
         <ResourceDictionary>
             <ContextMenu x:Key="PrimaryContextMenu" Opened="ContextMenu_Opened" >
                 <MenuItem Command="{Binding OptionsBackgroundImageCommand}" Header="设置背景图片(_B)" />
+                <MenuItem Command="{Binding OptionsClearBackgroundImageCommand}" Header="清除背景图片(_C)" />
                 <Separator />
                 <MenuItem x:Name="ExitMenuItem" Header="退出(_X)" Click="ExitMenuItem_Click" />
             </ContextMenu>
@@ -38,11 +39,13 @@
                 </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
-        <Image Source="{Binding BackgroundImageSource, Mode=OneWay}" Stretch="UniformToFill" />
-        <Thumb DragDelta="Thumb_DragDelta" VerticalAlignment="Top" HorizontalAlignment="Left" Width="20" Height="20" ToolTip="拖动以移动窗口。">
+        <Thumb DragDelta="Thumb_DragDelta" ToolTip="拖动以移动窗口。">
             <Thumb.Template>
                 <ControlTemplate>
-                    <Rectangle Stroke="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" Fill="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" />
+                    <Grid>
+                        <Rectangle Stroke="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" Fill="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" />
+                        <Image Source="{Binding BackgroundImageSource, Mode=OneWay}" Stretch="UniformToFill" />
+                    </Grid>
                 </ControlTemplate>
             </Thumb.Template>
         </Thumb>
@@ -53,28 +56,39 @@
                 <Label Content="分钟" />
                 <Button Content="4" FontFamily="Webdings" Command="{Binding StartCountdownCommand, Mode=OneWay}" Padding="10,1" ToolTip="手动开始计时。" />
                 <Button x:Name="MenuButton" Content="i" FontFamily="Webdings" ToolTip="菜单" Click="MenuButton_Click" ContextMenu="{DynamicResource PrimaryContextMenu}" />
-                <TextBlock TextWrapping="Wrap" Text="{Binding PresentationName, TargetNullValue=PowerPoint Countdown by Chen}" IsHitTestVisible="False"/>
+                <TextBlock TextWrapping="Wrap" Text="{Binding PresentationName, TargetNullValue=PowerPoint Countdown}" IsHitTestVisible="False"/>
             </WrapPanel>
             <StackPanel x:Name="CounterPanel">
-                <Grid HorizontalAlignment="Center">
+                <Grid>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="3*"/>
+                        <RowDefinition Height="2*"/>
+                        <RowDefinition/>
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="5*"/>
+                        <ColumnDefinition Width="*" MinWidth="20"/>
                     </Grid.ColumnDefinitions>
-                    <TextBlock TextWrapping="Wrap" Text="{Binding RemainingTime.Minutes, Mode=OneWay, StringFormat=\{0:00\}}" FontSize="32" Grid.RowSpan="2" Margin="0,0,20,0" />
-                    <TextBlock TextWrapping="Wrap" Text="{Binding RemainingTime.Hours, Mode=OneWay, StringFormat=\{0:00\}}" Grid.Column="1" VerticalAlignment="Center" />
-                    <TextBlock TextWrapping="Wrap" Text="{Binding RemainingTime.Seconds, Mode=OneWay, StringFormat=\{0:00\}}" Grid.Column="1" Grid.Row="1" VerticalAlignment="Center"/>
+                    <StackPanel x:Name="CounterDigitPanel" Orientation="Horizontal" IsHitTestVisible="False" HorizontalAlignment="Center" Grid.RowSpan="3">
+                        <StackPanel.LayoutTransform>
+                            <TransformGroup>
+                                <ScaleTransform x:Name="CounterDigitTransform" ScaleY="3" ScaleX="3"/>
+                                <SkewTransform/>
+                                <RotateTransform/>
+                                <TranslateTransform/>
+                            </TransformGroup>
+                        </StackPanel.LayoutTransform>
+                        <TextBlock TextWrapping="Wrap"
+                                   Text="{Binding RemainingTime.Minutes, Mode=OneWay, StringFormat=\{0:00\}}" />
+                        <TextBlock TextWrapping="Wrap" Text=":" />
+                        <TextBlock TextWrapping="Wrap"
+                                   Text="{Binding RemainingTime.Seconds, Mode=OneWay, StringFormat=\{0:00\}}" />
+                    </StackPanel>
+                    <ToggleButton Content="·" IsChecked="{Binding IsMonitorEnabled}" FontFamily="Webdings" ToolTip="监视 PowerPoint" Grid.Column="1" />
+                    <ToggleButton Content=";" IsChecked="{Binding IsCountdownPaused}" FontFamily="Webdings" ToolTip="暂停" Padding="5,1" Grid.Row="1" Grid.Column="1" />
+                    <Button Content="&lt;" FontFamily="Webdings" ToolTip="停止" Command="{Binding StopCountdownCommand, Mode=OneWay}" Grid.Column="1" Grid.Row="2" />
                 </Grid>
-                <StackPanel Orientation="Horizontal">
-                    <ToggleButton Content="·" IsChecked="{Binding IsMonitorEnabled}" FontFamily="Webdings" ToolTip="监视 PowerPoint" />
-                    <ToggleButton Content=";" IsChecked="{Binding IsCountdownPaused}" FontFamily="Webdings" ToolTip="暂停" Padding="5,1" />
-                    <Button Content="&lt;" FontFamily="Webdings" ToolTip="停止" Command="{Binding StopCountdownCommand, Mode=OneWay}" />
-                    <TextBlock TextWrapping="Wrap" Text="{Binding PresentationName, TargetNullValue=PowerPoint Countdown}" IsHitTestVisible="False"/>
-                </StackPanel>
+                <TextBlock x:Name="PresentationIndicatorLabel" TextWrapping="Wrap" Text="{Binding PresentationName, TargetNullValue=PowerPoint Countdown}" IsHitTestVisible="False"/>
             </StackPanel>
         </StackPanel>
     </Grid>

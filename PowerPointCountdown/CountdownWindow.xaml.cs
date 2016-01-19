@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,6 +14,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace PowerPointCountdown
 {
@@ -33,6 +35,7 @@ namespace PowerPointCountdown
                 if (ViewModel.IsCountdownStarted)
                 {
                     VisualStateManager.GoToElementState((FrameworkElement) this.Content, "Started", true);
+                    //Dispatcher.InvokeAsync(UpdateDigitHeight, DispatcherPriority.Background);
                 }
                 else
                 {
@@ -72,6 +75,26 @@ namespace PowerPointCountdown
         {
             // Fix data context.
             ((Control) sender).DataContext = this.DataContext;
+        }
+
+        private void ThisWindow_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            if (e.HeightChanged)
+            {
+                UpdateDigitHeight();
+            }
+        }
+
+        private void UpdateDigitHeight()
+        {
+            var h = CounterDigitPanel.ActualHeight;
+            //Debug.Print(h.ToString());
+            if (h > 0)
+            {
+                CounterDigitTransform.ScaleX =
+                    CounterDigitTransform.ScaleY =
+                        Math.Max(0.1, (this.Height - PresentationIndicatorLabel.ActualHeight)/h);
+            }
         }
     }
 }

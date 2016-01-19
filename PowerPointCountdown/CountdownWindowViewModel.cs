@@ -29,6 +29,7 @@ namespace PowerPointCountdown
         private DelegateCommand _StartCountdownCommand;
         private DelegateCommand _StopCountdownCommand;
         private DelegateCommand _OptionsBackgroundImageCommand;
+        private DelegateCommand _OptionsClearBackgroundImageCommand;
 
         private Timer myTimer = new Timer();
         private CountdownTimer cdt = new CountdownTimer();
@@ -181,6 +182,22 @@ namespace PowerPointCountdown
                     });
                 }
                 return _OptionsBackgroundImageCommand;
+            }
+        }
+
+        public DelegateCommand OptionsClearBackgroundImageCommand
+        {
+            get
+            {
+                if (_OptionsClearBackgroundImageCommand == null)
+                {
+                    _OptionsClearBackgroundImageCommand = new DelegateCommand(() =>
+                    {
+                        Settings.Default.BackgroundImageSource = null;
+                        ApplySettings();
+                    });
+                }
+                return _OptionsClearBackgroundImageCommand;
             }
         }
 
